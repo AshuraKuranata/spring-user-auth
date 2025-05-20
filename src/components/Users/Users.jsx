@@ -1,22 +1,31 @@
 import {useState, useEffect} from 'react'
+import { useNavigate } from 'react-router';
 
-function Users() {
 
-    const [allUsers, setAllUsers] = useState([])
+function Users({user, cookieUserCheck}) {
+    const navigate = useNavigate()
 
     useEffect(() => {
-            async function fetchData() {
-            try {
-                const res = await fetch("http://localhost:8080/auth/users");
-                if (!res.ok) throw new Error("Network response was not ok");
-                const data = await res.json();
-                setAllUsers(data);
-            } catch (error) {
-                console.error("Fetch failed:", error);
-            }
-            }
-            fetchData();
-        }, []);
+        if (!document.cookie.includes(cookieUserCheck)) {
+            navigate("/login")
+        }
+    })
+    
+
+    const [allUsers, setAllUsers] = useState([])
+    
+    useEffect(() => {
+        async function fetchData() {
+        try {
+            const res = await fetch("http://localhost:8080/auth/users");
+            if (!res.ok) throw new Error("Network response was not ok");
+            const data = await res.json();
+            setAllUsers(data);
+        } catch (error) {
+            console.error("Fetch failed:", error);
+        }}
+        fetchData();
+    }, []);
 
     const deleteUser = async (event) => {
         await fetch(`http://localhost:8080/auth/user/${event}/delete`, {
@@ -36,10 +45,15 @@ function Users() {
             <h1>No Users</h1>
         </div>
         :
-        allUsers.map((user, idx) => (
+        allUsers.map((userlist, idx) => (
             <div key={idx}>
-                <h2>{user.username}</h2>
-                <button onClick={(() => deleteUser(user.username))}>Delete {user.username}</button>
+                <h2>{userlist.username}</h2>
+                {user.username === userlist.username ?
+                <></>
+                :
+                <button onClick={(() => deleteUser(userlist.username))}>Delete {userlist.username}</button>
+                }
+                
             </div>
         ))}
         </>
