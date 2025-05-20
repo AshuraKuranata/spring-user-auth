@@ -92,7 +92,7 @@ const Login = ({user, setUser}) => {
         <h1>Sign-up</h1>
         <form>
             <label htmlFor="username">Username: </label>
-            <input type="text" name="username" required value={checkUser.username} onChange={handleChange}></input>
+            <input type="text" name="username" required autoComplete='false' value={checkUser.username} onChange={handleChange}></input>
             <label htmlFor="password">Password: </label>
             <input type='password' name='password' required autoComplete='false' value={checkUser.password} onChange={handleChange}></input>
             <button onClick={loginUser}>Login</button>

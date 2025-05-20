@@ -70,7 +70,7 @@ const Signup = ({user, setUser}) => {
         <h1>Sign-up</h1>
         <form>
             <label htmlFor="username">Username: </label>
-            <input type="text" name="username" required value={newUser.username} onChange={handleChange}></input>
+            <input type="text" name="username" required autoComplete='false' value={newUser.username} onChange={handleChange}></input>
             <label htmlFor="password">Password: </label>
             <input type='password' name='password' required autoComplete='false' value={newUser.password} onChange={handleChange}></input>
             <label htmlFor="confirmpassword">Confirm Password: </label>
