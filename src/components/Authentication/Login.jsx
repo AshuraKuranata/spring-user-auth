@@ -8,21 +8,23 @@ const Login = ({user, setUser}) => {
         username: '',
         password: '',
     })
-    const [allUsers, setAllUsers] = useState([])
 
-    useEffect(() => {
-        async function fetchData() {
-        try {
-            const res = await fetch("http://localhost:8080/auth/users");
-            if (!res.ok) throw new Error("Network response was not ok");
-            const data = await res.json(); // <- FIXED: Await this
-            setAllUsers(data);
-        } catch (error) {
-            console.error("Fetch failed:", error);
-        }
-        }
-        fetchData();
-    }, []);
+    // Old Route - confirming through a check against pulled data (without Bcrypt hashing)
+    // const [allUsers, setAllUsers] = useState([])
+
+    // useEffect(() => {
+    //     async function fetchData() {
+    //     try {
+    //         const res = await fetch("http://localhost:8080/auth/users");
+    //         if (!res.ok) throw new Error("Network response was not ok");
+    //         const data = await res.json();
+    //         setAllUsers(data);
+    //     } catch (error) {
+    //         console.error("Fetch failed:", error);
+    //     }
+    //     }
+    //     fetchData();
+    // }, []);
 
     const handleChange = (event) => {
         event.preventDefault()
@@ -45,6 +47,7 @@ const Login = ({user, setUser}) => {
             const result = await res.json();
 
             if (result.message === "Login Successful!") {
+                document.cookie = "username=" + checkUser.username
                 setUser({...user, username: checkUser.username});
                 setCheckUser({username: '', password: ''});
                 navigate('/');
@@ -89,7 +92,7 @@ const Login = ({user, setUser}) => {
         <h1>Sign-up</h1>
         <form>
             <label htmlFor="username">Username: </label>
-            <input type="text" name="username" required value={checkUser.username} onChange={handleChange}></input>
+            <input type="text" name="username" required autoComplete='false' value={checkUser.username} onChange={handleChange}></input>
             <label htmlFor="password">Password: </label>
             <input type='password' name='password' required autoComplete='false' value={checkUser.password} onChange={handleChange}></input>
             <button onClick={loginUser}>Login</button>

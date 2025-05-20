@@ -40,8 +40,7 @@ const Signup = ({user, setUser}) => {
                 throw new Error('Username already exists, please use a different username.')
             }
             else {
-                setNewUser({...newUser, confirmpassword: null})
-                console.log(newUser)
+                setNewUser({...newUser, confirmpassword: ''})
                 await fetch('http://localhost:8080/auth/user/create',{
                     method: "POST",
                     headers: {
@@ -49,6 +48,7 @@ const Signup = ({user, setUser}) => {
                     },
                     body: JSON.stringify(newUser)
                 })
+                document.cookie = "username=" + newUser.username
                 setError(null)
                 setUser( {...user, username: newUser.username} )
                 setNewUser({
@@ -70,7 +70,7 @@ const Signup = ({user, setUser}) => {
         <h1>Sign-up</h1>
         <form>
             <label htmlFor="username">Username: </label>
-            <input type="text" name="username" required value={newUser.username} onChange={handleChange}></input>
+            <input type="text" name="username" required autoComplete='false' value={newUser.username} onChange={handleChange}></input>
             <label htmlFor="password">Password: </label>
             <input type='password' name='password' required autoComplete='false' value={newUser.password} onChange={handleChange}></input>
             <label htmlFor="confirmpassword">Confirm Password: </label>
