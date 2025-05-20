@@ -29,33 +29,60 @@ const Login = ({user, setUser}) => {
         setCheckUser({...checkUser, [event.target.name]: event.target.value})
     }
 
+    // With Bcrypt hashing
     const loginUser = async (event) => {
         event.preventDefault()
+        setError(null)
         try {
-            const foundUser = allUsers.find(user => user.username === checkUser.username);
+            const res = await fetch("http://localhost:8080/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(checkUser)
+            });
 
-            if (!foundUser) {
-                throw new Error('Incorrect credientials, please try again.')
+            const result = await res.json();
+
+            if (result.message === "Login Successful!") {
+                setUser({...user, username: checkUser.username});
+                setCheckUser({username: '', password: ''});
+                navigate('/');
             }
-
-            else if (foundUser.password !== checkUser.password) {
-                throw new Error('Incorrect credientials, please try again.')
-            }
-
-            else {
-                setUser( {...user, username: checkUser.username} )
-                setCheckUser({
-                    username: '',
-                    password: '',
-                })
-                navigate('/')
+            else{
+                throw new Error(result.message);
             }
         } catch(error){
             setError(error.message);
         }
-        
-        
     }
+
+    // Previous Log-in Route without Bcrypt Hashing
+    // const loginUser = async (event) => {
+    //     event.preventDefault()
+    //     try {
+    //         const foundUser = allUsers.find(user => user.username === checkUser.username);
+
+    //         if (!foundUser) {
+    //             throw new Error('Incorrect credientials, please try again.')
+    //         }
+
+    //         else if (foundUser.password !== checkUser.password) {
+    //             throw new Error('Incorrect credientials, please try again.')
+    //         }
+
+    //         else {
+    //             setUser( {...user, username: checkUser.username} )
+    //             setCheckUser({
+    //                 username: '',
+    //                 password: '',
+    //             })
+    //             navigate('/')
+    //         }
+    //     } catch(error){
+    //         setError(error.message);
+    //     }
+    // }
 
     return (
         <>
